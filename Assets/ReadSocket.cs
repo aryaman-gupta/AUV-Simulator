@@ -23,8 +23,11 @@ public class ReadSocket : MonoBehaviour {
 		print ("is listening");
 		Time.fixedDeltaTime = 0.04f;
 	}
-	// Update is called once per frame
 
+	/* During initialisation of the system, the user needs to press the space key to attempt to 
+	 * set up a socket connection with the control algorithm. This should be done after the server
+	 * at the control algorithm machine has been started.
+	 * */
 	void Update()
 	{
 		if (Input.GetKey (KeyCode.Space)) {
@@ -36,13 +39,16 @@ public class ReadSocket : MonoBehaviour {
 		}
 	}
 
+	/* The FixedUpdate function is responsible for receiving data from the control algorithm, i.e.,
+	 * the values of forces at the thrusters. Once the control algorithm connects as a client, this
+	 * function is responsible for periodically receiving the data, processing it, and storing the 
+	 * values in the global variable 'ForceVals'.
+	 * */
 	void FixedUpdate()
 	{
-		
-
 		if (!listener.Pending ())
 		{
-			//			Debug.Log ("Listening");
+//						Debug.Log ("Listening");
 		} 
 		else 
 		{
@@ -56,7 +62,6 @@ public class ReadSocket : MonoBehaviour {
 			Debug.Log (msg);
 			char[] splitter = { ' ' };
 			ForceVals = msg.Split (splitter, StringSplitOptions.RemoveEmptyEntries);
-//			gameObject.GetComponent<ControlThrusters> ().AddForces ();
 
 			gameObject.GetComponent<ControlThrusters> ().Lock = false;
 

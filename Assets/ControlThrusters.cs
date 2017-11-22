@@ -33,7 +33,6 @@ public class ControlThrusters : MonoBehaviour {
 	public bool Lock = false;
 	int iterations;
 
-	// Use this for initialization
 	void Start () {
 
 		Port = WritePort;
@@ -57,6 +56,12 @@ public class ControlThrusters : MonoBehaviour {
 		#endif
 	}
 
+
+	/* Update function sends images from the cameras attached to the AUV, to the control algorithm. In order
+	 * to maintain sufficient communication frequency, images cannot be sent in their entirety. Therefore, 
+	 * edge detection is performed on the images, to detect meaningful data.
+	 * 
+	*/
 	void Update (){
 		// Examine whether Lock is required
 
@@ -208,6 +213,8 @@ public class ControlThrusters : MonoBehaviour {
 	}
 
 
+	/* Applies the forces received from the control algorithm to the thrusters.
+	 * */
 	public void AddForces()
 	{
 		string[] ForceVals = gameObject.GetComponent<ReadSocket> ().ForceVals;
@@ -215,8 +222,6 @@ public class ControlThrusters : MonoBehaviour {
 		transform.GetChild (1).GetComponent<ThrusterControl> ().AddForce (float.Parse (ForceVals [1]));
 		transform.GetChild (2).GetComponent<ThrusterControl> ().AddForce (float.Parse (ForceVals [2]));
 		transform.GetChild (3).GetComponent<ThrusterControl> ().AddForce (float.Parse (ForceVals [3]));
-
-//		transform.parent.GetComponent<Rigidbody> ().AddTorque (0, float.Parse (ForceVals [0]), 0, ForceMode.Impulse);
 	}
 
 	void FixedUpdate () {
@@ -226,11 +231,13 @@ public class ControlThrusters : MonoBehaviour {
 				Lock = true;
 				SendData ();
 			}
-//			iterations++;
-//			Debug.Log (iterations);
 		}
 	}
+	
 
+	/* Sets up a TCP socket connection with the server running on the machine runing
+	 * the control algorithm.
+	 * */
 	public IEnumerator SetupSocket()
 	{
 		Debug.Log ("Setting the socket up");
@@ -250,6 +257,10 @@ public class ControlThrusters : MonoBehaviour {
 	}
 	}
 
+
+	/* Send sensor data as feedback to the control algorithm. The data sent includes the orientation of the vehicle,
+	 * acceleration in all three dimensions, depth under water, and forward velocity in local frame.
+	 * */
 	void SendData() {
 		try {
 			Vector3 CurRot = transform.parent.transform.rotation.eulerAngles;

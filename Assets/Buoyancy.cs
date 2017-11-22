@@ -22,7 +22,6 @@ public class Buoyancy : MonoBehaviour {
 	}
 
 	void FixedUpdate () {
-//		Debug.Log (gameObject.transform.rotation.eulerAngles);
 		float y = transform.position.y;
 		Vector3 MaxUpthrust = l * b * h * rho * Physics.gravity * -1000f;
 

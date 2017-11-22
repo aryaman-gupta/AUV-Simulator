@@ -11,16 +11,13 @@ public class ThrusterControl : MonoBehaviour {
 		water = GameObject.Find ("Water Surface");
 		posForce = transform.localPosition;
 	}
+
+	/* A public function which can be called from another script with the
+	 * value of the force to be applied as argument. Applies the force to
+	 * the thruster to which this script is attached, in the direction as
+	 * specified in the global variable, for that thruster.
+	 * */
 	public void AddForce (float ForceMag) {
-//		Debug.Log ("Applying force " + ForceMag + " at pos" + posForce);
-//		Vector3 localDir = gameObject.transform.parent.parent.transform.rotation.eulerAngles;
-//		Vector3 actualDir;
-//		Debug.Log (localDir);
-//		Debug.Log (dir);
-//		actualDir.x = dir.x * localDir.x;
-//		actualDir.y = dir.y * localDir.y;
-//		actualDir.z = dir.z * localDir.z;
-//		Debug.Log (actualDir);
 
 		if(gameObject.transform.position.y < water.transform.position.y)
 		{
