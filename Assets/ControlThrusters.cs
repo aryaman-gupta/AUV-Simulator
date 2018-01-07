@@ -264,10 +264,10 @@ public class ControlThrusters : MonoBehaviour {
 	void SendData() {
 		try {
 			Vector3 CurRot = transform.parent.transform.rotation.eulerAngles;
-			Vector3 CurAcc = (transform.parent.GetComponent<Rigidbody>().velocity - prevVelocity)/Time.deltaTime;
-			prevVelocity = transform.parent.GetComponent<Rigidbody>().velocity;
-			string temp = CurRot.x.ToString("+000.00;-000.00") + " " + CurRot.y.ToString("+000.00;-000.00") + " "
-				+ CurRot.z.ToString("+000.00;-000.00") + " " + CurAcc.x.ToString("+000.00;-000.00") + " "
+			Vector3 CurAcc = (transform.parent.transform.InverseTransformVector(transform.parent.GetComponent<Rigidbody>().velocity) - prevVelocity)/Time.deltaTime;
+			prevVelocity = transform.parent.transform.InverseTransformVector(transform.parent.GetComponent<Rigidbody>().velocity);
+			string temp = CurRot.x.ToString("+000.00;-000.00") + " " + CurRot.z.ToString("+000.00;-000.00") + " "
+			+ (-CurRot.y).ToString("+000.00;-000.00") + " " + CurAcc.x.ToString("+000.00;-000.00") + " "
 				+ CurAcc.y.ToString("+000.00;-000.00") + " " + CurAcc.z.ToString("+000.00;-000.00") + " "
 				+ transform.parent.position.y.ToString("+000.00;-000.00") + " "
 				+ transform.parent.GetComponent<Rigidbody>().velocity.x.ToString("+000.00;-000.00") + " $";

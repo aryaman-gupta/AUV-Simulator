@@ -13,7 +13,7 @@ public class ReadSocket : MonoBehaviour {
 	// Use this for initialization
 	TcpListener listener;
 	String msg;
-	public string[] ForceVals = {"0", "0", "0", "0"};
+	public string[] ForceVals = {"0", "0", "0", "0", "0", "0"};
 	bool firstCall = true;
 	public Int32 ListenPort = 55002;
 	void Start () {
