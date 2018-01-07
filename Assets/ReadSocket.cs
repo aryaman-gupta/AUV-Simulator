@@ -14,6 +14,7 @@ public class ReadSocket : MonoBehaviour {
 	TcpListener listener;
 	String msg;
 	public string[] ForceVals = {"0", "0", "0", "0", "0", "0"};
+	string[] firstSplit = { "0 0 0 0 0 0" };
 	bool firstCall = true;
 	public Int32 ListenPort = 55002;
 	void Start () {
@@ -59,9 +60,12 @@ public class ReadSocket : MonoBehaviour {
 			StreamReader reader = new StreamReader (ns);
 			msg = reader.ReadToEnd ();
 
-			Debug.Log (msg);
+
+			char[] split1 = { '$' };
 			char[] splitter = { ' ' };
-			ForceVals = msg.Split (splitter, StringSplitOptions.RemoveEmptyEntries);
+			firstSplit = msg.Split (split1, StringSplitOptions.RemoveEmptyEntries);
+			Debug.Log (firstSplit[0]);
+			ForceVals = firstSplit[0].Split (splitter, StringSplitOptions.RemoveEmptyEntries);
 
 			gameObject.GetComponent<ControlThrusters> ().Lock = false;
 

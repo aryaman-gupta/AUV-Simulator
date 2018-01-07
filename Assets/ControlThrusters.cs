@@ -222,6 +222,9 @@ public class ControlThrusters : MonoBehaviour {
 		transform.GetChild (1).GetComponent<ThrusterControl> ().AddForce (float.Parse (ForceVals [1]));
 		transform.GetChild (2).GetComponent<ThrusterControl> ().AddForce (float.Parse (ForceVals [2]));
 		transform.GetChild (3).GetComponent<ThrusterControl> ().AddForce (float.Parse (ForceVals [3]));
+		transform.GetChild (4).GetComponent<ThrusterControl> ().AddForce (float.Parse (ForceVals [4]));
+		transform.GetChild (5).GetComponent<ThrusterControl> ().AddForce (float.Parse (ForceVals [5]));
+
 	}
 
 	void FixedUpdate () {
@@ -267,11 +270,11 @@ public class ControlThrusters : MonoBehaviour {
 			Vector3 CurAcc = (transform.parent.transform.InverseTransformVector(transform.parent.GetComponent<Rigidbody>().velocity) - prevVelocity)/Time.deltaTime;
 			prevVelocity = transform.parent.transform.InverseTransformVector(transform.parent.GetComponent<Rigidbody>().velocity);
 			string temp = CurRot.x.ToString("+000.00;-000.00") + " " + CurRot.z.ToString("+000.00;-000.00") + " "
-			+ (-CurRot.y).ToString("+000.00;-000.00") + " " + CurAcc.x.ToString("+000.00;-000.00") + " "
-				+ CurAcc.y.ToString("+000.00;-000.00") + " " + CurAcc.z.ToString("+000.00;-000.00") + " "
-				+ transform.parent.position.y.ToString("+000.00;-000.00") + " "
+				+ (-CurRot.y).ToString("+000.00;-000.00") + " " + CurAcc.x.ToString("+000.00;-000.00") + " "
+				+ CurAcc.z.ToString("+000.00;-000.00") + " " + (-CurAcc.y).ToString("+000.00;-000.00") + " "
+				+ (-transform.parent.position.y).ToString("+000.00;-000.00") + " "
 				+ transform.parent.GetComponent<Rigidbody>().velocity.x.ToString("+000.00;-000.00") + " $";
-			Debug.Log(temp);
+//			Debug.Log(temp);
 			#if notSelf
 			theWriter.WriteLine(temp);
 			theWriter.Flush();

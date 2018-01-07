@@ -33,6 +33,8 @@ public class Buoyancy : MonoBehaviour {
 			upthrust = MaxUpthrust / 2 + (waterLevel - y) * MaxUpthrust / h;
 //		Vector3 CenterOfBuoyancy = COB_Pos.transform.position;
 //		Debug.Log (CenterOfBuoyancy);
-		COB_Pos.transform.GetComponent<Rigidbody>().AddForceAtPosition(upthrust, Vector3.zero);
+//		COB_Pos.transform.GetComponent<Rigidbody>().AddForceAtPosition(upthrust, Vector3.zero);
+		transform.GetComponent<Rigidbody>().AddForceAtPosition(upthrust, transform.position);
+
 	}
 }
