@@ -64,7 +64,16 @@ public class ControlThrusters : MonoBehaviour {
 	*/
 	void Update (){
 		// Examine whether Lock is required
-
+		Vector3 CurRot = transform.parent.transform.rotation.eulerAngles;
+//		if(CurRot.x > 180.0f)
+//			CurRot.x -= 360.0f;
+//		if(CurRot.y > 180.0f)
+//			CurRot.y -= 360.0f;
+//		if(CurRot.z > 180.0f)
+//			CurRot.z -= 360.0f;
+//
+//		CurRot *= 3.14f/180.0f;
+//		Debug.Log (CurRot);
 		#if UsePics
 
 //		if(Input.GetKey(KeyCode.Space))
@@ -224,7 +233,6 @@ public class ControlThrusters : MonoBehaviour {
 		transform.GetChild (3).GetComponent<ThrusterControl> ().AddForce (float.Parse (ForceVals [3]));
 		transform.GetChild (4).GetComponent<ThrusterControl> ().AddForce (float.Parse (ForceVals [4]));
 		transform.GetChild (5).GetComponent<ThrusterControl> ().AddForce (float.Parse (ForceVals [5]));
-
 	}
 
 	void FixedUpdate () {
@@ -267,14 +275,24 @@ public class ControlThrusters : MonoBehaviour {
 	void SendData() {
 		try {
 			Vector3 CurRot = transform.parent.transform.rotation.eulerAngles;
+			if(CurRot.x > 180.0f)
+				CurRot.x -= 360.0f;
+			if(CurRot.y > 180.0f)
+				CurRot.y -= 360.0f;
+			if(CurRot.z > 180.0f)
+				CurRot.z -= 360.0f;
+
+			CurRot *= 3.14f/180.0f;
 			Vector3 CurAcc = (transform.parent.transform.InverseTransformVector(transform.parent.GetComponent<Rigidbody>().velocity) - prevVelocity)/Time.deltaTime;
 			prevVelocity = transform.parent.transform.InverseTransformVector(transform.parent.GetComponent<Rigidbody>().velocity);
-			string temp = CurRot.x.ToString("+000.00;-000.00") + " " + CurRot.z.ToString("+000.00;-000.00") + " "
-				+ (-CurRot.y).ToString("+000.00;-000.00") + " " + CurAcc.x.ToString("+000.00;-000.00") + " "
+			string temp = (-CurRot.x).ToString("+000.00;-000.00") + " " + (-CurRot.z).ToString("+000.00;-000.00") + " "
+				+ (CurRot.y).ToString("+000.00;-000.00") + " " + CurAcc.x.ToString("+000.00;-000.00") + " "
 				+ CurAcc.z.ToString("+000.00;-000.00") + " " + (-CurAcc.y).ToString("+000.00;-000.00") + " "
 				+ (-transform.parent.position.y).ToString("+000.00;-000.00") + " "
 				+ transform.parent.GetComponent<Rigidbody>().velocity.x.ToString("+000.00;-000.00") + " $";
-//			Debug.Log(temp);
+			Debug.Log(temp);
+//			Debug.Log(-CurRot.z);
+
 			#if notSelf
 			theWriter.WriteLine(temp);
 			theWriter.Flush();

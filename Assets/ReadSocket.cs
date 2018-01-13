@@ -13,8 +13,8 @@ public class ReadSocket : MonoBehaviour {
 	// Use this for initialization
 	TcpListener listener;
 	String msg;
-	public string[] ForceVals = {"0", "0", "0", "0", "0", "0"};
-	string[] firstSplit = { "0 0 0 0 0 0" };
+	public string[] ForceVals = {"1500", "1500", "1500", "1500", "1500", "1500"};
+	string[] firstSplit = { "1500 1500 1500 1500 1500 1500" };
 	bool firstCall = true;
 	public Int32 ListenPort = 55002;
 	void Start () {
@@ -54,7 +54,7 @@ public class ReadSocket : MonoBehaviour {
 		else 
 		{
 
-			Debug.Log("socket comes");
+			//Debug.Log("socket comes");
 			TcpClient client = listener.AcceptTcpClient ();
 			NetworkStream ns = client.GetStream ();
 			StreamReader reader = new StreamReader (ns);
