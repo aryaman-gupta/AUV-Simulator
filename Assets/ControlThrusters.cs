@@ -9,6 +9,8 @@ using System.Text;
 using System.IO;
 using UnityEngine;
 using System.Collections.Generic;
+using ROSBridgeLib;
+using ROSBridgeLib.auv_msgs;
 
 public class ControlThrusters : MonoBehaviour {
 
@@ -19,7 +21,7 @@ public class ControlThrusters : MonoBehaviour {
 	StreamReader theReader;
 	public Int32 WritePort = 55001;
 	Int32 Port;
-	bool Ready = false;
+//	bool Ready = false;
 	GameObject bottomCam;
 	GameObject frontCam;
 	RenderTexture bottomImage;
@@ -32,12 +34,14 @@ public class ControlThrusters : MonoBehaviour {
 	public string IPaddress = "192.168.2.4";
 	public bool Lock = false;
 	int iterations;
+	GameObject obj;
+	CombinedMsg msg;
 
 	void Start () {
-
 		Port = WritePort;
 		iterations = 0;
 		Time.fixedDeltaTime = 0.04f;
+		obj = GameObject.Find ("Main Camera");
 		#if UsePics
 		bottomImage = new RenderTexture (256, 256, 16, RenderTextureFormat.ARGB32);
 		bottomImage.Create ();
@@ -226,47 +230,48 @@ public class ControlThrusters : MonoBehaviour {
 	 * */
 	public void AddForces()
 	{
-		string[] ForceVals = gameObject.GetComponent<ReadSocket> ().ForceVals;
-		transform.GetChild (0).GetComponent<ThrusterControl> ().AddForce (float.Parse (ForceVals [0]));
-		transform.GetChild (1).GetComponent<ThrusterControl> ().AddForce (float.Parse (ForceVals [1]));
-		transform.GetChild (2).GetComponent<ThrusterControl> ().AddForce (float.Parse (ForceVals [2]));
-		transform.GetChild (3).GetComponent<ThrusterControl> ().AddForce (float.Parse (ForceVals [3]));
-		transform.GetChild (4).GetComponent<ThrusterControl> ().AddForce (float.Parse (ForceVals [4]));
-		transform.GetChild (5).GetComponent<ThrusterControl> ().AddForce (float.Parse (ForceVals [5]));
+//		string[] ForceVals = gameObject.GetComponent<ReadSocket> ().ForceVals;
+		short[] ForceVals = ReadSocket.ForceVals;
+		transform.GetChild (0).GetComponent<ThrusterControl> ().AddForce (ForceVals [0]);
+		transform.GetChild (1).GetComponent<ThrusterControl> ().AddForce (ForceVals [1]);
+		transform.GetChild (2).GetComponent<ThrusterControl> ().AddForce (ForceVals [2]);
+		transform.GetChild (3).GetComponent<ThrusterControl> ().AddForce (ForceVals [3]);
+		transform.GetChild (4).GetComponent<ThrusterControl> ().AddForce (ForceVals [4]);
+		transform.GetChild (5).GetComponent<ThrusterControl> ().AddForce (ForceVals [5]);
 	}
 
 	void FixedUpdate () {
-		if (Ready) {
+//		if (Ready) {
 			AddForces ();
 			if (!Lock) {
 				Lock = true;
 				SendData ();
 			}
-		}
+//		}
 	}
 	
 
 	/* Sets up a TCP socket connection with the server running on the machine runing
 	 * the control algorithm.
 	 * */
-	public IEnumerator SetupSocket()
-	{
-		Debug.Log ("Setting the socket up");
-		yield return null;
-	try{
-		#if notSelf
-		mySocket = new TcpClient  (IPAddress.Parse(IPaddress).ToString(), Port);
-		theStream = mySocket.GetStream();
-
-		theWriter = new StreamWriter(theStream);
-
-		#endif
-		Ready = true;
-	}
-	catch (Exception e) {
-		Debug.Log("Socket error: " + e);
-	}
-	}
+//	public IEnumerator SetupSocket()
+//	{
+//		Debug.Log ("Setting the socket up");
+//		yield return null;
+//	try{
+//		#if notSelf
+//		mySocket = new TcpClient  (IPAddress.Parse(IPaddress).ToString(), Port);
+//		theStream = mySocket.GetStream();
+//
+//		theWriter = new StreamWriter(theStream);
+//
+//		#endif
+//		Ready = true;
+//	}
+//	catch (Exception e) {
+//		Debug.Log("Socket error: " + e);
+//	}
+//	}
 
 
 	/* Send sensor data as feedback to the control algorithm. The data sent includes the orientation of the vehicle,
@@ -285,19 +290,22 @@ public class ControlThrusters : MonoBehaviour {
 			CurRot *= 3.14f/180.0f;
 			Vector3 CurAcc = (transform.parent.transform.InverseTransformVector(transform.parent.GetComponent<Rigidbody>().velocity) - prevVelocity)/Time.deltaTime;
 			prevVelocity = transform.parent.transform.InverseTransformVector(transform.parent.GetComponent<Rigidbody>().velocity);
-			string temp = (-CurRot.x).ToString("+000.00;-000.00") + " " + (-CurRot.z).ToString("+000.00;-000.00") + " "
-				+ (CurRot.y).ToString("+000.00;-000.00") + " " + CurAcc.x.ToString("+000.00;-000.00") + " "
-				+ CurAcc.z.ToString("+000.00;-000.00") + " " + (-CurAcc.y).ToString("+000.00;-000.00") + " "
-				+ (-transform.parent.position.y).ToString("+000.00;-000.00") + " "
-				+ transform.parent.GetComponent<Rigidbody>().velocity.x.ToString("+000.00;-000.00") + " $";
-			Debug.Log(temp);
-//			Debug.Log(-CurRot.z);
+//			string temp = (-CurRot.x).ToString("+000.00;-000.00") + " " + (-CurRot.z).ToString("+000.00;-000.00") + " "
+//				+ (CurRot.y).ToString("+000.00;-000.00") + " " + CurAcc.x.ToString("+000.00;-000.00") + " "
+//				+ CurAcc.z.ToString("+000.00;-000.00") + " " + (-CurAcc.y).ToString("+000.00;-000.00") + " "
+//				+ (-transform.parent.position.y).ToString("+000.00;-000.00") + " "
+//				+ transform.parent.GetComponent<Rigidbody>().velocity.x.ToString("+000.00;-000.00") + " $";
+//			Debug.Log(temp);
+			float[] angular = new float[]{-CurRot.x, -CurRot.z, CurRot.y};
+			float[] linear = new float[]{CurAcc.x, -transform.parent.position.y, -CurAcc.y};
 
+			msg = new CombinedMsg(angular, linear);
+			
 			#if notSelf
-			theWriter.WriteLine(temp);
-			theWriter.Flush();
+			Debug.Log ("Sending: " + msg.ToYAMLString ());
+		Debug.Log("Sending to topic: " + ROSPublisher.GetMessageTopic());
+			obj.GetComponent<ROS_Initialize> ().ros.Publish(ROSPublisher.GetMessageTopic(), msg);
 			#endif
-//			Debug.Log ("socket is sent");
 		}
 		catch (Exception e) {
 			Debug.Log("Socket error: " + e);

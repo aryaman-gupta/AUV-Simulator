@@ -1883,14 +1883,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c4393027f7f2b444ca58afd797694703, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ForceVals:
-  - 1500
-  - 1500
-  - 1500
-  - 1500
-  - 1500
-  - 1500
-  ListenPort: 55002
 --- !u!1 &1688048115
 GameObject:
   m_ObjectHideFlags: 0
@@ -1904,6 +1896,7 @@ GameObject:
   - component: {fileID: 1688048117}
   - component: {fileID: 1688048116}
   - component: {fileID: 1688048121}
+  - component: {fileID: 1688048122}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -1998,6 +1991,17 @@ MonoBehaviour:
   normalMoveSpeed: 10
   slowMoveFactor: 0.25
   fastMoveFactor: 3
+--- !u!114 &1688048122
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1688048115}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 12fac968d1895e345844859671f67f0c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1759040683
 GameObject:
   m_ObjectHideFlags: 0

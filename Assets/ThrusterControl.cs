@@ -10,18 +10,18 @@ public class ThrusterControl : MonoBehaviour {
 
 	/* PWM to force, as per BlueRobotics T100 thruster.
 	 * */
-	float adjustForces(float initial) {
+	float adjustForces(short initial) {
 		float adjusted = 0.0f;
 
-		if (initial >= 1470.0 && initial <= 1530.0) {
+		if (initial >= 1470 && initial <= 1530) {
 			adjusted = 0.0f;
 //			Debug.Log ("Adjusted = " + adjusted + " for thruster " + thrusterNumber);
 		}
 		else if (initial > 1530) {
-			initial -= 1530.0f;
+			initial -= 1530;
 			adjusted = initial / 370.0f * 2.36f;
 		} else {
-			initial -= 1470.0f;
+			initial -= 1470;
 			adjusted = initial / 370.0f * 1.85f;
 		}
 		adjusted *= 9.8f * 1000.0f;
@@ -40,16 +40,16 @@ public class ThrusterControl : MonoBehaviour {
 	 * the thruster to which this script is attached, in the direction as
 	 * specified in the global variable, for that thruster.
 	 * */
-	public void AddForce (float ForceMag) {
+	public void AddForce (short ForceMag) {
 
-		ForceMag = adjustForces (ForceMag);
-//		Debug.Log ("Force " + ForceMag + " being applied to thruster " + thrusterNumber);
+		float finalForce = adjustForces (ForceMag);
+		//		Debug.Log ("Force " + finalForce + " being applied to thruster " + thrusterNumber);
 
-		if(true)//gameObject.transform.position.y < water.transform.position.y)
+		if(gameObject.transform.position.y < water.transform.position.y)
 		{
 			
 			transform.GetComponent<Rigidbody> ().AddRelativeForce (
-				dir * ForceMag, ForceMode.Force);
+				dir * finalForce, ForceMode.Force);
 
 		}
 }
