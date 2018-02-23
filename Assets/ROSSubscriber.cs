@@ -11,7 +11,7 @@ public class ROSSubscriber : ROSBridgeSubscriber  {
 	public static short[] ForceVals = {1500, 1500, 1500, 1500, 1500, 1500};
 
 	public new static string GetMessageTopic() {
-		return "/chatter";
+		return "/thruster_speeds";
 	}
 
 	public new static string GetMessageType() {

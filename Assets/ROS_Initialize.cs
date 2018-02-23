@@ -10,7 +10,10 @@ public class ROS_Initialize : MonoBehaviour {
 	void Start () {
 		ros = new ROSBridgeWebSocketConnection ("ws://192.168.43.83", 9090);
 		ros.AddSubscriber (typeof(ROSSubscriber));
+		ros.AddPublisher (typeof(ImagePublisher));
+
 		ros.AddPublisher (typeof(ROSPublisher));
+
 		ros.Connect ();
 	}
 

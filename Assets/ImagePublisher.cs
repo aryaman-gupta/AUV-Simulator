@@ -6,22 +6,22 @@ using ROSBridgeLib.std_msgs;
 using ROSBridgeLib.auv_msgs;
 using SimpleJSON;
 
-public class ROSPublisher : ROSBridgePublisher  {
+public class ImagePublisher : ROSBridgePublisher  {
 
 	// The following three functions are important
 	public static string GetMessageTopic() {
-		return "/combined";
+		return "/images";
 	}
 
 	public static string GetMessageType() {
-		return "synchronizer/Combined";
+		return "std_msgs/String";
 	}
 
-	public static string ToYAMLString(CombinedMsg msg) {
+	public static string ToYAMLString(StringMsg msg) {
 		return msg.ToYAMLString();
 	}
 
 	public new static ROSBridgeMsg ParseMessage(JSONNode msg) {
-		return new CombinedMsg(msg);
+		return new StringMsg(msg);
 	}    
 }
