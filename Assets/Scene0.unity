@@ -717,7 +717,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!23 &479109686
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -835,7 +835,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3681eaea6ae32984b9a51fe3e2ee77ed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dir: {x: 0, y: 0, z: 1}
+  dir: {x: 0, y: 0, z: -1}
   thrusterNumber: 6
 --- !u!138 &595489783
 FixedJoint:
@@ -1602,13 +1602,13 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 985178951}
-  m_LocalRotation: {x: 0.7071068, y: -0, z: -0, w: 0.7071068}
+  m_LocalRotation: {x: 0.5, y: 0.5, z: -0.5, w: 0.5}
   m_LocalPosition: {x: 0, y: -0.5, z: -0}
   m_LocalScale: {x: 0.39682543, y: 0.39682564, z: 0.39682564}
   m_Children: []
   m_Father: {fileID: 1212412804}
   m_RootOrder: 3
-  m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 90, y: 90, z: 0}
 --- !u!92 &985178954
 Behaviour:
   m_ObjectHideFlags: 0
@@ -1952,7 +1952,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   waterLevel: 0
-  CenterOfMass: {x: 0, y: 0, z: 0}
+  CenterOfMass: {x: 0, y: -0.3, z: 0}
   rho: 1
 --- !u!138 &1212412807
 FixedJoint:
@@ -2311,7 +2311,7 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 2100000, guid: 9445b3b55c0933a42b3e4d075227c3a5, type: 2}
+  - {fileID: 2100000, guid: dd332d2c26562fb409c798a67116523a, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -2654,8 +2654,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   WritePort: 55025
-  colThresh: 100
-  IPaddress: 192.168.1.4
+  colThreshHigh: 100
+  colThreshLow: 100
+  IPaddress: 192.168.2.4
   Lock: 0
 --- !u!114 &1647332476
 MonoBehaviour:

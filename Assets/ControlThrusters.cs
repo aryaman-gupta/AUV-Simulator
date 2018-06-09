@@ -31,7 +31,9 @@ public class ControlThrusters : MonoBehaviour {
 	Texture2D imageToSend2;
 	Vector3 prevVelocity = Vector3.zero;
 	bool firstSend = true;
-	public int colThresh = 100;
+	public int colThreshHigh = 100;
+	public int colThreshLow = 100;
+
 	public string IPaddress = "192.168.2.4";
 	public bool Lock = false;
 	int iterations;
@@ -44,13 +46,13 @@ public class ControlThrusters : MonoBehaviour {
 		Time.fixedDeltaTime = 0.04f;
 		obj = GameObject.Find ("Main Camera");
 		#if UsePics
-		bottomImage = new RenderTexture (256, 256, 16, RenderTextureFormat.ARGB32);
+		bottomImage = new RenderTexture (320, 240, 16, RenderTextureFormat.ARGB32);
 		bottomImage.Create ();
 		bottomCam = GameObject.Find ("BottomCam");
 		bottomCam.GetComponent<Camera> ().targetTexture = bottomImage;
 		bottomCam.GetComponent<Camera> ().Render ();
 
-		frontImage = new RenderTexture (256, 256, 16, RenderTextureFormat.ARGB32);
+		frontImage = new RenderTexture (320, 240, 16, RenderTextureFormat.ARGB32);
 		frontImage.Create ();
 		frontCam = GameObject.Find ("FrontCam");
 		frontCam.GetComponent<Camera> ().targetTexture = frontImage;
@@ -97,14 +99,19 @@ public class ControlThrusters : MonoBehaviour {
 		StringBuilder pixelsToSend1 = new StringBuilder("", 500000);
 		StringBuilder pixelsToSend2 = new StringBuilder("", 500000);
 		StringBuilder pixelsToSend3 = new StringBuilder ("", 500000);
+		StringBuilder pixelsToSend4 = new StringBuilder("", 500000);
+		StringBuilder pixelsToSend5 = new StringBuilder("", 500000);
+		StringBuilder pixelsToSend6 = new StringBuilder ("", 500000);
 		int cnt = 0;
 		Color32[] allPixels = imageToSend.GetPixels32 ();
-
+		
+		//Bottom Image R Component
 		for (int i = 0; i < bottomImage.height; i++) {
 			bool prev = false;
 			bool noChanges = true;
 			for (int j = 0; j < bottomImage.width; j++) {
-					if ((allPixels [(255 - i) * bottomImage.height + j].r > colThresh) != prev) {
+				Color32 currentVal = allPixels [(239 - i) * bottomImage.width+ j];
+				if ((currentVal.r > colThreshHigh && currentVal.g < colThreshLow && currentVal.b < colThreshLow) != prev) {
 					noChanges = false;
 					prev = !prev;
 					pixelsToSend1.Append (j).Append (":");
@@ -114,7 +121,40 @@ public class ControlThrusters : MonoBehaviour {
 				pixelsToSend1.Append ("-1");
 			pixelsToSend1.Append (">");
 		}
+		
+		//Bottom Image G Component
+		for (int i = 0; i < bottomImage.height; i++) {
+			bool prev = false;
+			bool noChanges = true;
+			for (int j = 0; j < bottomImage.width; j++) {
+				Color32 currentVal = allPixels [(239 - i) * bottomImage.width+ j];
+				if ((currentVal.g > colThreshHigh && currentVal.r < colThreshLow && currentVal.b < colThreshLow) != prev) {
+					noChanges = false;
+					prev = !prev;
+					pixelsToSend2.Append (j).Append (":");
+				}
+			}
+			if (noChanges)
+				pixelsToSend2.Append ("-1");
+			pixelsToSend2.Append (">");
+		}
 
+		//Bottom Image B Component
+		for (int i = 0; i < bottomImage.height; i++) {
+			bool prev = false;
+			bool noChanges = true;
+			for (int j = 0; j < bottomImage.width; j++) {
+				Color32 currentVal = allPixels [(239 - i) * bottomImage.width+ j];
+				if ((currentVal.b > colThreshHigh && currentVal.r < colThreshLow && currentVal.g < colThreshLow) != prev) {
+					noChanges = false;
+					prev = !prev;
+					pixelsToSend3.Append (j).Append (":");
+				}
+			}
+			if (noChanges)
+				pixelsToSend3.Append ("-1");
+			pixelsToSend3.Append (">");
+		}
 		//			for(int i=0; i<bottomImage.width*bottomImage.height; i++) {
 		//				Color32 pixel = allPixels [i];
 		//				if (pixel.r > colThresh) {
@@ -129,36 +169,55 @@ public class ControlThrusters : MonoBehaviour {
 		imageToSend2.Apply ();
 
 		allPixels = imageToSend2.GetPixels32 ();
-
+		//Front Image R Component
 		for (int i = 0; i < frontImage.height; i++) {
 			bool prev = false;
 			bool noChanges = true;
 			for (int j = 0; j < frontImage.width; j++) {
-					if ((allPixels [(255 - i) * frontImage.height + j].r > colThresh) != prev) {
+				Color32 currentVal = allPixels [(239 - i) * frontImage.width+ j];
+				if ((currentVal.r > colThreshHigh && currentVal.g < colThreshLow && currentVal.b < colThreshLow) != prev) {
 					noChanges = false;
 					prev = !prev;
-					pixelsToSend2.Append (j).Append (":");
+					pixelsToSend4.Append (j).Append (":");
 				}
 			}
 			if (noChanges)
-				pixelsToSend2.Append ("-1");
-			pixelsToSend2.Append (">");
+				pixelsToSend4.Append ("-1");
+			pixelsToSend4.Append (">");
 		}
 
-			for (int i = 0; i < frontImage.height; i++) {
-				bool prev = false;
-				bool noChanges = true;
-				for (int j = 0; j < frontImage.width; j++) {
-					if ((allPixels [(255 - i) * frontImage.height + j].r > colThresh) != prev) {
-						noChanges = false;
-						prev = !prev;
-						pixelsToSend3.Append (j).Append (":");
-					}
+		//Front Image G Component
+		for (int i = 0; i < frontImage.height; i++) {
+			bool prev = false;
+			bool noChanges = true;
+			for (int j = 0; j < frontImage.width; j++) {
+				Color32 currentVal = allPixels [(239 - i) * frontImage.width+ j];
+				if ((currentVal.g > colThreshHigh && currentVal.r < colThreshLow && currentVal.b < colThreshLow) != prev) {
+					noChanges = false;
+					prev = !prev;
+					pixelsToSend5.Append (j).Append (":");
 				}
-				if (noChanges)
-					pixelsToSend3.Append ("-1");
-				pixelsToSend3.Append (">");
 			}
+			if (noChanges)
+				pixelsToSend5.Append ("-1");
+			pixelsToSend5.Append (">");
+		}
+		//Front Image B Component
+		for (int i = 0; i < frontImage.height; i++) {
+			bool prev = false;
+			bool noChanges = true;
+			for (int j = 0; j < frontImage.width; j++) {
+				Color32 currentVal = allPixels [(239 - i) * frontImage.width+ j];
+				if ((currentVal.b > colThreshHigh && currentVal.r < colThreshLow && currentVal.g < colThreshLow) != prev) {
+					noChanges = false;
+					prev = !prev;
+					pixelsToSend6.Append (j).Append (":");
+				}
+			}
+			if (noChanges)
+				pixelsToSend6.Append ("-1");
+			pixelsToSend6.Append (">");
+		}
 
 		//			for(int i=0; i<frontImage.width*frontImage.height; i++) {
 		//				Color32 pixel = allPixels [i];
@@ -171,7 +230,8 @@ public class ControlThrusters : MonoBehaviour {
 //			Debug.Log(pixelsToSend1.Length + " " + pixelsToSend1);
 //			Debug.Log("Bottom Cam" + pixelsToSend1.Length + " " + pixelsToSend1.ToString());
 
-		pixelsToSend1.Append ("!").Append (pixelsToSend2);
+			pixelsToSend1.Append ("!").Append (pixelsToSend2).Append ("!").Append (pixelsToSend3).Append ("!")
+				.Append (pixelsToSend4).Append ("!").Append (pixelsToSend5).Append ("!").Append (pixelsToSend6);
 //			pixelsToSend1.Append ("!").Append (pixelsToSend3);
 		try {
 

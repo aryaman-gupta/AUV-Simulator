@@ -8,7 +8,7 @@ public class ROS_Initialize : MonoBehaviour {
 	public ROSBridgeWebSocketConnection ros = null;
 	// Use this for initialization
 	void Start () {
-		ros = new ROSBridgeWebSocketConnection ("ws://192.168.43.83", 9090);
+		ros = new ROSBridgeWebSocketConnection ("ws://192.168.29.110", 9090);
 		ros.AddSubscriber (typeof(ROSSubscriber));
 		ros.AddPublisher (typeof(ImagePublisher));
 
