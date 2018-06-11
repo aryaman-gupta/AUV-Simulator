@@ -35,7 +35,7 @@ public class Buoyancy : MonoBehaviour {
 //		Debug.Log (CenterOfBuoyancy);
 //		COB_Pos.transform.GetComponent<Rigidbody>().AddForceAtPosition(upthrust, Vector3.zero);
 		transform.GetComponent<Rigidbody>().AddForceAtPosition(upthrust, transform.position);
-		Debug.Log ("Applying buoyancy at " + transform.position);
+//		Debug.Log ("Applying buoyancy at " + transform.position);
 
 	}
 }

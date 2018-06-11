@@ -1,6 +1,7 @@
 ﻿#define notSelf
 #define UsePics
 
+
 using System.Collections;
 using System.Net;
 using System.Net.Sockets;
@@ -14,6 +15,9 @@ using ROSBridgeLib.auv_msgs;
 using ROSBridgeLib.std_msgs;
 
 public class ControlThrusters : MonoBehaviour {
+
+	int ImageWidth = 648;
+	int ImageHeight = 488;
 
 	internal Boolean socketReady = false;
 	TcpClient mySocket;
@@ -30,6 +34,7 @@ public class ControlThrusters : MonoBehaviour {
 	Texture2D imageToSend;
 	Texture2D imageToSend2;
 	Vector3 prevVelocity = Vector3.zero;
+	Vector3 prevRot;
 	bool firstSend = true;
 	public int colThreshHigh = 100;
 	public int colThreshLow = 100;
@@ -38,21 +43,22 @@ public class ControlThrusters : MonoBehaviour {
 	public bool Lock = false;
 	int iterations;
 	GameObject obj;
-	CombinedMsg msg;
+	Ctrl_InputMsg msg;
 	StringMsg imgMsg;
 	void Start () {
 		Port = WritePort;
 		iterations = 0;
 		Time.fixedDeltaTime = 0.04f;
 		obj = GameObject.Find ("Main Camera");
+		prevRot = transform.parent.transform.rotation.eulerAngles;
 		#if UsePics
-		bottomImage = new RenderTexture (320, 240, 16, RenderTextureFormat.ARGB32);
+		bottomImage = new RenderTexture (ImageWidth, ImageHeight, 16, RenderTextureFormat.ARGB32);
 		bottomImage.Create ();
 		bottomCam = GameObject.Find ("BottomCam");
 		bottomCam.GetComponent<Camera> ().targetTexture = bottomImage;
 		bottomCam.GetComponent<Camera> ().Render ();
 
-		frontImage = new RenderTexture (320, 240, 16, RenderTextureFormat.ARGB32);
+		frontImage = new RenderTexture (ImageWidth, ImageHeight, 16, RenderTextureFormat.ARGB32);
 		frontImage.Create ();
 		frontCam = GameObject.Find ("FrontCam");
 		frontCam.GetComponent<Camera> ().targetTexture = frontImage;
@@ -110,7 +116,7 @@ public class ControlThrusters : MonoBehaviour {
 			bool prev = false;
 			bool noChanges = true;
 			for (int j = 0; j < bottomImage.width; j++) {
-				Color32 currentVal = allPixels [(239 - i) * bottomImage.width+ j];
+				Color32 currentVal = allPixels [(ImageHeight - 1 - i) * bottomImage.width+ j];
 				if ((currentVal.r > colThreshHigh && currentVal.g < colThreshLow && currentVal.b < colThreshLow) != prev) {
 					noChanges = false;
 					prev = !prev;
@@ -127,7 +133,7 @@ public class ControlThrusters : MonoBehaviour {
 			bool prev = false;
 			bool noChanges = true;
 			for (int j = 0; j < bottomImage.width; j++) {
-				Color32 currentVal = allPixels [(239 - i) * bottomImage.width+ j];
+				Color32 currentVal = allPixels [(ImageHeight - 1 - i) * bottomImage.width+ j];
 				if ((currentVal.g > colThreshHigh && currentVal.r < colThreshLow && currentVal.b < colThreshLow) != prev) {
 					noChanges = false;
 					prev = !prev;
@@ -144,7 +150,7 @@ public class ControlThrusters : MonoBehaviour {
 			bool prev = false;
 			bool noChanges = true;
 			for (int j = 0; j < bottomImage.width; j++) {
-				Color32 currentVal = allPixels [(239 - i) * bottomImage.width+ j];
+				Color32 currentVal = allPixels [(ImageHeight - 1 - i) * bottomImage.width+ j];
 				if ((currentVal.b > colThreshHigh && currentVal.r < colThreshLow && currentVal.g < colThreshLow) != prev) {
 					noChanges = false;
 					prev = !prev;
@@ -174,7 +180,7 @@ public class ControlThrusters : MonoBehaviour {
 			bool prev = false;
 			bool noChanges = true;
 			for (int j = 0; j < frontImage.width; j++) {
-				Color32 currentVal = allPixels [(239 - i) * frontImage.width+ j];
+				Color32 currentVal = allPixels [(ImageHeight - 1 - i) * frontImage.width+ j];
 				if ((currentVal.r > colThreshHigh && currentVal.g < colThreshLow && currentVal.b < colThreshLow) != prev) {
 					noChanges = false;
 					prev = !prev;
@@ -191,7 +197,7 @@ public class ControlThrusters : MonoBehaviour {
 			bool prev = false;
 			bool noChanges = true;
 			for (int j = 0; j < frontImage.width; j++) {
-				Color32 currentVal = allPixels [(239 - i) * frontImage.width+ j];
+				Color32 currentVal = allPixels [(ImageHeight - 1 - i) * frontImage.width+ j];
 				if ((currentVal.g > colThreshHigh && currentVal.r < colThreshLow && currentVal.b < colThreshLow) != prev) {
 					noChanges = false;
 					prev = !prev;
@@ -207,7 +213,7 @@ public class ControlThrusters : MonoBehaviour {
 			bool prev = false;
 			bool noChanges = true;
 			for (int j = 0; j < frontImage.width; j++) {
-				Color32 currentVal = allPixels [(239 - i) * frontImage.width+ j];
+				Color32 currentVal = allPixels [(ImageHeight - 1 - i) * frontImage.width+ j];
 				if ((currentVal.b > colThreshHigh && currentVal.r < colThreshLow && currentVal.g < colThreshLow) != prev) {
 					noChanges = false;
 					prev = !prev;
@@ -347,7 +353,7 @@ public class ControlThrusters : MonoBehaviour {
 	void SendData() {
 		try {
 			Vector3 CurRot = transform.parent.transform.rotation.eulerAngles;
-			Debug.Log("The angles are: " + CurRot);
+//			Debug.Log("The angles are: " + CurRot);
 			if(CurRot.x > 180.0f)
 				CurRot.x -= 360.0f;
 			if(CurRot.y > 180.0f)
@@ -355,9 +361,13 @@ public class ControlThrusters : MonoBehaviour {
 			if(CurRot.z > 180.0f)
 				CurRot.z -= 360.0f;
 
-//			CurRot *= 3.14f/180.0f;
-			Vector3 CurAcc = (transform.parent.transform.InverseTransformVector(transform.parent.GetComponent<Rigidbody>().velocity) - prevVelocity)/Time.deltaTime;
-			prevVelocity = transform.parent.transform.InverseTransformVector(transform.parent.GetComponent<Rigidbody>().velocity);
+			CurRot *= (float)Math.PI/180.0f;
+			Vector3 curVelocity = transform.parent.transform.InverseTransformVector(transform.parent.GetComponent<Rigidbody>().velocity);
+			Vector3 CurAcc = (curVelocity - prevVelocity)/Time.deltaTime;
+			prevVelocity = curVelocity;
+//			Vector3 Omega = (CurRot - prevRot)/Time.deltaTime;
+			Vector3 Omega = transform.parent.transform.InverseTransformVector(transform.parent.GetComponent<Rigidbody>().angularVelocity);
+			prevRot = CurRot;
 //			string temp = (-CurRot.x).ToString("+000.00;-000.00") + " " + (-CurRot.z).ToString("+000.00;-000.00") + " "
 //				+ (CurRot.y).ToString("+000.00;-000.00") + " " + CurAcc.x.ToString("+000.00;-000.00") + " "
 //				+ CurAcc.z.ToString("+000.00;-000.00") + " " + (-CurAcc.y).ToString("+000.00;-000.00") + " "
@@ -367,16 +377,29 @@ public class ControlThrusters : MonoBehaviour {
 
 			float modifiedDepth = (-transform.parent.position.y*15.0f)+930.0f;
 
-			float[] angular = new float[]{-CurRot.x, CurRot.z, CurRot.y};
-			float[] linear = new float[]{CurAcc.x, -CurAcc.z, modifiedDepth};
+			//Uncomment for old controller
+//			float[] angular = new float[]{-CurRot.x, CurRot.z, CurRot.y};
+//			float[] linear = new float[]{CurAcc.x, -CurAcc.z, modifiedDepth};
+//
+//			msg = new CombinedMsg(angular, linear);
 
-			msg = new CombinedMsg(angular, linear);
+			//For new controller
+			float[] velocity = new float[]{curVelocity.x, -curVelocity.z, -curVelocity.y};
+			float[] acceleration = new float[]{CurAcc.x, -CurAcc.z, -CurAcc.y};
+			float[] angle = new float[]{-CurRot.x, CurRot.z, CurRot.y};
+			float[] omega = new float[]{-Omega.x, Omega.z, Omega.y};
+
+			msg = new Ctrl_InputMsg(velocity, acceleration, angle, omega, modifiedDepth);
+
 			
 			#if notSelf
-			Debug.Log ("Sending: " + msg.ToYAMLString ());
-		Debug.Log("Sending to topic: " + ROSPublisher.GetMessageTopic());
+			Debug.Log ("Sending: Depth = " + modifiedDepth);
+			Debug.Log ("Sending: Force = " + CurAcc.y * 15000);
+
+			Debug.Log("Sending to topic: " + ROSPublisher.GetMessageTopic());
 			obj.GetComponent<ROS_Initialize> ().ros.Publish(ROSPublisher.GetMessageTopic(), msg);
 			#endif
+
 		}
 		catch (Exception e) {
 			Debug.Log("Socket error: " + e);

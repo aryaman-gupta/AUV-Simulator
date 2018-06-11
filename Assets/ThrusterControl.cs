@@ -43,7 +43,7 @@ public class ThrusterControl : MonoBehaviour {
 	public void AddForce (short ForceMag) {
 
 		float finalForce = adjustForces (ForceMag);
-		//		Debug.Log ("Force " + finalForce + " being applied to thruster " + thrusterNumber);
+				Debug.Log ("Force " + finalForce + " being applied to thruster " + thrusterNumber);
 
 		if(gameObject.transform.position.y < water.transform.position.y)
 		{

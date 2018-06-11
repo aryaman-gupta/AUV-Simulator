@@ -1,4 +1,5 @@
 {
-	"dependencies": {
-	}
+  "dependencies": {
+    "com.unity.xiaomi": "1.0.0"
+  }
 }

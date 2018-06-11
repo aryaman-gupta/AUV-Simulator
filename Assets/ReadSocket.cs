@@ -75,8 +75,8 @@ public class ReadSocket : MonoBehaviour {
 //
 //		}
 		ForceVals = ROSSubscriber.ForceVals;
-		Debug.Log ("ForceVals = " + ForceVals[0] + " " + ForceVals[1] + " " + ForceVals[2] + " " + ForceVals[3] + " " + 
-			ForceVals[4] + " " + ForceVals[5] + " " );
+//		Debug.Log ("ForceVals = " + ForceVals[0] + " " + ForceVals[1] + " " + ForceVals[2] + " " + ForceVals[3] + " " + 
+//			ForceVals[4] + " " + ForceVals[5] + " " );
 		gameObject.GetComponent<ControlThrusters> ().Lock = false;
 
 	}
