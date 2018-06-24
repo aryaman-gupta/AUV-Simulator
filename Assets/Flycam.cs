@@ -43,7 +43,8 @@ public class Flycam : MonoBehaviour
 
 	void Start ()
 	{
-		Screen.lockCursor = true;
+		Application.runInBackground = true;
+//		Screen.lockCursor = true;
 	}
 
 	void Update ()
