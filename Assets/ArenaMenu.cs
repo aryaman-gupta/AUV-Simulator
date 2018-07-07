@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
-public class arena_buttons : MonoBehaviour {
+public class ArenaMenu : MonoBehaviour {
 
     public Rigidbody rb;
     public Vector3 v;

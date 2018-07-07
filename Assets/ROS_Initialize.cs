@@ -8,8 +8,7 @@ public class ROS_Initialize : MonoBehaviour {
 	public ROSBridgeWebSocketConnection ros = null;
 	// Use this for initialization
 	void Start () {
-		ros = new ROSBridgeWebSocketConnection ("ws://"+scene_change.ip, 9090);
-        
+		ros = new ROSBridgeWebSocketConnection ("ws://"+MainMenu.ip, 9090);
 		ros.AddSubscriber (typeof(ROSSubscriber));
 		ros.AddPublisher (typeof(ImagePublisher));
 

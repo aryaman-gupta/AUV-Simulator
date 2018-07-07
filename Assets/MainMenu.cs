@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-public class scene_change : MonoBehaviour
+public class MainMenu : MonoBehaviour
 {
     public InputField input;
     public static string ip;
@@ -13,16 +13,19 @@ public class scene_change : MonoBehaviour
     public void toscene0()
     {
         SceneManager.LoadScene("scene0");
+        ip = input.text.ToString();
     }
 
     public void toscene1()
     {
         SceneManager.LoadScene("SAVe");
+        ip = input.text.ToString();
     }
-   /* public void toscene2()
-    {
-        SceneManager.LoadScene("scene2");
-    }*/
+    /* public void toscene2()
+     {
+         SceneManager.LoadScene("scene2");
+          ip = input.text.ToString();
+     }*/
 
     public void OnLocalHost()
     {
@@ -30,10 +33,7 @@ public class scene_change : MonoBehaviour
         
     }
 
-    public void OnApply()
-    {
-        ip = input.text.ToString();
-    }
+   
 
 
 }
