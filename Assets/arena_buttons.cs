@@ -27,5 +27,6 @@ public class arena_buttons : MonoBehaviour {
 
         rb.transform.position = v;
         rb.transform.rotation = Quaternion.Euler(0, 0, 0);
+        rb.velocity = new Vector3(0, 0, 0);
     }
 }
