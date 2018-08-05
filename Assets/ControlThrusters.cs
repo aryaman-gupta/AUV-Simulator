@@ -247,25 +247,26 @@ public class ControlThrusters : MonoBehaviour {
 //			pixelsToSend1.Insert(0, pixelsToSend1.Length.ToString("00000000") + " ");
 				imgMsg = new StringMsg(pixelsToSend1.ToString());
 				obj.GetComponent<ROS_Initialize> ().ros.Publish(ImagePublisher.GetMessageTopic(), imgMsg);
+                Debug.Log("Sending to topic: " + ImagePublisher.GetMessageTopic());
 
-//			theWriter.WriteLine(pixelsToSend1);//.ToString().Substring(0, 2000));//.ToString().Substring(0, 1022));
-			//				theWriter.Flush();
-			//				theWriter.WriteLine(pixelsToSend1.ToString().Substring(0, 2048));
-			//				theWriter.WriteLine(pixelsToSend1);
-			//				Debug.Log(Encoding.ASCII.GetBytes(pixelsToSend1.ToString()).Length);
-			//				theStream.Write(Encoding.ASCII.GetBytes(pixelsToSend1.ToString()), 0, Encoding.ASCII.GetBytes(pixelsToSend1.ToString()).Length);
-//			theWriter.Flush();
-			#endif
+                //			theWriter.WriteLine(pixelsToSend1);//.ToString().Substring(0, 2000));//.ToString().Substring(0, 1022));
+                //				theWriter.Flush();
+                //				theWriter.WriteLine(pixelsToSend1.ToString().Substring(0, 2048));
+                //				theWriter.WriteLine(pixelsToSend1);
+                //				Debug.Log(Encoding.ASCII.GetBytes(pixelsToSend1.ToString()).Length);
+                //				theStream.Write(Encoding.ASCII.GetBytes(pixelsToSend1.ToString()), 0, Encoding.ASCII.GetBytes(pixelsToSend1.ToString()).Length);
+                //			theWriter.Flush();
+#endif
 
-//			Debug.Log(pixelsToSend1.Length + " " + pixelsToSend1);
+                //			Debug.Log(pixelsToSend1.Length + " " + pixelsToSend1);
 
-//			Debug.Log(pixelsToSend2.Length + " " + pixelsToSend2);
-//				Debug.Log("Front Cam" + pixelsToSend2.Length + " " + pixelsToSend2.ToString());
+                //			Debug.Log(pixelsToSend2.Length + " " + pixelsToSend2);
+                //				Debug.Log("Front Cam" + pixelsToSend2.Length + " " + pixelsToSend2.ToString());
 
-//				Debug.Log(pixelsToSend3.Length + " " + pixelsToSend3);
-//				Debug.Log(pixelsToSend3.Length + " " + pixelsToSend3.ToString());
+                //				Debug.Log(pixelsToSend3.Length + " " + pixelsToSend3);
+                //				Debug.Log(pixelsToSend3.Length + " " + pixelsToSend3.ToString());
 
-		} catch (Exception e) {
+            } catch (Exception e) {
 			Debug.Log ("Socket error" + e);
 		}
 
