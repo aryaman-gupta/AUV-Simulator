@@ -27,7 +27,7 @@ public class FlareData : MonoBehaviour {
             rz = rz + 20;
         }
 
-        float rx = UnityEngine.Random.Range(0, 30);
+        float rx = UnityEngine.Random.Range(47,80);
         Vector3 pos = new Vector3(rx, -7, rz);
         flare.transform.position = pos;
         
